@@ -21,7 +21,7 @@ class ShellForm extends React.Component {
             <Fragment>
                 <InputForm/>
                 <OutputForm
-                    item={this.state.max}
+                    max={this.state.max}
                 />
             </Fragment>
         );
