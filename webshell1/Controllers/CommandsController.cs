@@ -37,6 +37,18 @@ namespace webshell1.Controllers
 
             return command;
         }
+        [HttpGet("last")]
+        public async Task<ActionResult<Command>> GetLastCommand()
+        {
+            var command = await context.Commands.OrderBy(c => c.Id).LastOrDefaultAsync();
+
+            if (command == null)
+            {
+                return NotFound();
+            }
+
+            return command;
+        }
         [HttpPost]
         public async Task<ActionResult<Command>> PostCommand([FromBody] string input)
         {
