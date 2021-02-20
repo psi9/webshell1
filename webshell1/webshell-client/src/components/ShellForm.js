@@ -5,15 +5,15 @@ import OutputForm from './OutputForm';
 
 class ShellForm extends React.Component {
     state = {
-        item: ''
+        max: ''
     }
     componentDidMount() {
-        this.getItem();
+        this.getMaxID();
     }
-    getItem = () => {
+    getMaxID = () => {
         fetch(`${API_URL}/last`)
             .then(res => res.json())
-            .then(res => this.setState({ item: res }))
+            .then(res => this.setState({ max: res.id }))
             .catch(err => console.log(err));
     }
     render() {
@@ -21,7 +21,7 @@ class ShellForm extends React.Component {
             <Fragment>
                 <InputForm/>
                 <OutputForm
-                    item={this.state.item}
+                    item={this.state.max}
                 />
             </Fragment>
         );
