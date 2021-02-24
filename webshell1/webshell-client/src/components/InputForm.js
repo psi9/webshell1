@@ -4,41 +4,31 @@ import { API_URL } from '../apiurl';
 
 
 class InputForm extends React.Component {
-    state = {
-        id: '',
-        input: ''
+    handleChange = e => {
+        this.props.onInputChange(e.target.value)
     }
-    onChange = e => {
-        this.setState({ input: e.target.value })
+    handleSubmit = e => {
+        this.props.onInputSubmit(e)
     }
-    onSubmit = e => {
-        e.preventDefault();
-        fetch(`${API_URL}`, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.input)
-            })
-        .then(res => res.json())
-        .catch(err => console.log(err));
+    handleKeyDown = e => {
+        this.props.onKeyDown(e)
     }
-
     render() {
         return (
-            <Form onSubmit={this.onSubmit} className="inputForm">
+            <Form onSubmit={this.handleSubmit} className="inputForm">
                 <FormGroup>
                     <Row>
                         <Col md={6}>
                             <Input
                                 type="text"
                                 name="input"
-                                placeholder="Type a PowerShell command here"
-                                onChange={this.onChange}
+                                value={this.props.input}
+                                onChange={this.handleChange}
+                                onKeyDown={this.handleKeyDown}
                             />
                         </Col>
                         <Col>
-                            <Button>execute</Button>
+                            <Button type="submit">execute</Button>
                         </Col>
                     </Row>
                 </FormGroup>

@@ -46,7 +46,6 @@ namespace webshell1.Controllers
             {
                 return NotFound();
             }
-
             return command;
         }
         [HttpPost]
