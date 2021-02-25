@@ -26,12 +26,11 @@ namespace webshell1
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "error cr8 db");
+                    logger.LogError(ex, "db creating error");
                 }
             }
             host.Run();
         }
-
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

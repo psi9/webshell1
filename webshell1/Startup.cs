@@ -28,9 +28,7 @@ namespace webshell1
             services.AddDbContext<CommandContext>(options => options.UseSqlServer(connection));
             services.AddControllers();
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "webshell-client/build");
-            
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -38,7 +36,6 @@ namespace webshell1
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
@@ -46,7 +43,6 @@ namespace webshell1
                     name: "default",
                     pattern: "{controller=Commands}/{action=Index}/{id?}");
             });
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();

@@ -1,7 +1,5 @@
 ﻿import React from 'react';
 import { Form, FormGroup, Input, Button, Col, Row } from 'reactstrap';
-import { API_URL } from '../apiurl';
-
 
 class InputForm extends React.Component {
     handleChange = e => {
