@@ -1,5 +1,5 @@
 ﻿import React, { Fragment } from 'react';
-import { API_URL } from '../apiurl';
+import { API_URL, API_URL_LAST } from '../apiurl';
 import InputForm from './InputForm';
 import OutputForm from './OutputForm';
 
@@ -14,7 +14,7 @@ class ShellForm extends React.Component {
         this.getLastItem();
     }
     getLastItem = () => {
-        fetch(`${API_URL}/last`)
+        fetch(`${API_URL_LAST}`)
             .then(res => res.json())
             .then(res => this.setState({
                 max: res.id,
