@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace webshell1
+﻿namespace webshell1
 {
     public class Command
     {
