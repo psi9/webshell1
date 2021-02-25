@@ -1,6 +1,4 @@
-import './App.css';
 import './components/components.css';
-
 import React, { Fragment } from 'react';
 import ShellForm from './components/ShellForm'
 

@@ -54,13 +54,13 @@ class ShellForm extends React.Component {
             .catch(err => console.log(err));
     }
     onKeyDown = e => {
-        if (e.keyCode === 38 && this.state.current > 1) {
+        if (e.key === "ArrowUp" && this.state.current > 1) {
             this.setState(previous => ({
                 current: previous.current - 1
             }));
             this.getItem(this.state.current - 1);
         }
-        else if (e.keyCode === 40 && this.state.current < this.state.max) {
+        else if (e.key === "ArrowDown" && this.state.current < this.state.max) {
             this.setState(previous => ({
                 current: previous.current + 1
             }));
