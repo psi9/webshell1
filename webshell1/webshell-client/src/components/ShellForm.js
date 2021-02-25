@@ -1,5 +1,5 @@
 ﻿import React, { Fragment } from 'react';
-import { API_URL } from '../apiurl';
+import { API_URL, API_URL_LAST } from '../apiurl';
 import InputForm from './InputForm';
 import OutputForm from './OutputForm';
 
@@ -14,7 +14,7 @@ class ShellForm extends React.Component {
         this.getLastItem();
     }
     getLastItem = () => {
-        fetch(`${API_URL}/last`)
+        fetch(`${API_URL_LAST}`)
             .then(res => res.json())
             .then(res => this.setState({
                 max: res.id,
@@ -54,13 +54,13 @@ class ShellForm extends React.Component {
             .catch(err => console.log(err));
     }
     onKeyDown = e => {
-        if (e.keyCode === 38 && this.state.current > 1) {
+        if (e.key === "ArrowUp" && this.state.current > 1) {
             this.setState(previous => ({
                 current: previous.current - 1
             }));
             this.getItem(this.state.current - 1);
         }
-        else if (e.keyCode === 40 && this.state.current < this.state.max) {
+        else if (e.key === "ArrowDown" && this.state.current < this.state.max) {
             this.setState(previous => ({
                 current: previous.current + 1
             }));
