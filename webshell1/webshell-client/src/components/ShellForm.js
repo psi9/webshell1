@@ -5,7 +5,7 @@ import OutputForm from './OutputForm';
 
 class ShellForm extends React.Component {
     state = {
-        current: '0',
+        current: '',
         input: '',
         output: '',
         max: ''

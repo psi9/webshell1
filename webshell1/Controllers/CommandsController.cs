@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -13,10 +14,12 @@ namespace webshell1.Controllers
     public class CommandsController : Controller
     {
         private readonly CommandContext context;
+        private readonly IDistributedCache cache;
 
-        public CommandsController(CommandContext context)
+        public CommandsController(CommandContext context, IDistributedCache cache)
         {
             this.context = context;
+            this.cache = cache;
         }
         [HttpGet]
         public async Task<ActionResult<List<Command>>> Index()
@@ -24,14 +27,29 @@ namespace webshell1.Controllers
             return await context.Commands.ToListAsync();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Command>> GetCommand(int id)
+        public Task<ActionResult<Command>> GetCommand(int id)
         {
-            var command = await context.Commands.FindAsync(id);
-
-            if (command == null)
+            string requestTag = "";
+            bool isCached = false;
+            if (Request.Headers.ContainsKey("If-None-Match"))
             {
-                return NotFound();
+                requestTag = Request.Headers["If-None-Match"].First();
+                if (!string.IsNullOrEmpty(requestTag))
+                {
+                    string oldCacheKey = $"command-{id}-{requestTag}";
+                    string cachedCommandJson = this.cache.GetString(oldCacheKey);
+                    if (!string.IsNullOrEmpty(cachedCommandJson))
+                    {
+                        
+                    }
+                }
             }
+            //Command command = await context.Commands.FindAsync(id);
+
+            //if (command == null)
+            //{
+            //    return NotFound();
+            //}
 
             return command;
         }
@@ -73,4 +91,3 @@ namespace webshell1.Controllers
         }
     }
 }
-
