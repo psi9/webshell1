@@ -5,31 +5,26 @@ import OutputForm from './OutputForm';
 
 class ShellForm extends React.Component {
     state = {
+        items: [],
+        max: '',
         current: '',
         input: '',
-        output: '',
-        max: ''
+        output: ''
     }
     componentDidMount() {
-        this.getLastItem();
+        this.getItems();
+        this.setState({
+            input: this.state.items.map(item => item.input)[this.state.max - 1],
+            output: this.state.items.map(item => item.output)[this.state.max - 1]
+        })
     }
-    getLastItem = () => {
-        fetch(`${API_URL_LAST}`)
+    getItems = () => {
+        fetch(`${API_URL}`)
             .then(res => res.json())
             .then(res => this.setState({
-                max: res.id,
-                current: res.id,
-                input: res.input,
-                output: res.output
-            }))
-            .catch(err => console.log(err));
-    }
-    getItem = (id) => {
-        fetch(`${API_URL}/${id}`)
-            .then(res => res.json())
-            .then(res => this.setState({
-                input: res.input,
-                output: res.output
+                items: res,
+                max: res.length,
+                current: res.length
             }))
             .catch(err => console.log(err));
     }
@@ -47,7 +42,7 @@ class ShellForm extends React.Component {
         })
             .then(res => res.json())
             .then(res => this.setState({
-                output: res.output,
+                items: [...res.items, res],
                 max: res.id,
                 current: res.id
             }))
@@ -58,13 +53,13 @@ class ShellForm extends React.Component {
             this.setState(previous => ({
                 current: previous.current - 1
             }));
-            this.getItem(this.state.current - 1);
+
         }
         else if (e.key === "ArrowDown" && this.state.current < this.state.max) {
             this.setState(previous => ({
                 current: previous.current + 1
             }));
-            this.getItem(this.state.current + 1);
+
         }
         
     }
