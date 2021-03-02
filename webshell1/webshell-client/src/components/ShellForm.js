@@ -5,16 +5,17 @@ import OutputForm from './OutputForm';
 
 class ShellForm extends React.Component {
     state = {
+        items: [],
+        max: '',
         current: '',
         input: '',
-        output: '',
-        max: ''
+        output: ''
     }
     componentDidMount() {
         this.getItems();
     }
-    getItem = (id) => {
-        fetch(`${API_URL}/${id}`)
+    getItems = () => {
+        fetch(`${API_URL}`)
             .then(res => res.json())
             .then(res => this.setState({
                 items: res,
@@ -39,26 +40,29 @@ class ShellForm extends React.Component {
         })
             .then(res => res.json())
             .then(res => this.setState({
-                output: res.output,
+                items: [...this.state.items, res],
                 max: res.id,
-                current: res.id
+                current: res.id,
+                output: res.output
             }))
             .catch(err => console.log(err));
     }
     onKeyDown = e => {
         if (e.key === "ArrowUp" && this.state.current > 1) {
             this.setState(previous => ({
-                current: previous.current - 1
+                current: previous.current - 1,
+                input: (this.state.items.map(item => item.input))[this.state.current - 2],
+                output: (this.state.items.map(item => item.output))[this.state.current - 2]
             }));
-            this.getItem(this.state.current - 1);
+
         }
         else if (e.key === "ArrowDown" && this.state.current < this.state.max) {
             this.setState(previous => ({
-                current: previous.current + 1
+                current: previous.current + 1,
+                input: (this.state.items.map(item => item.input))[this.state.current],
+                output: (this.state.items.map(item => item.output))[this.state.current]
             }));
-            this.getItem(this.state.current + 1);
         }
-        
     }
     render() {
         return (
