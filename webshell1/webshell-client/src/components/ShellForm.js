@@ -1,5 +1,5 @@
 ﻿import React, { Fragment } from 'react';
-import { API_URL, API_URL_LAST } from '../apiurl';
+import { API_URL } from '../apiurl';
 import InputForm from './InputForm';
 import OutputForm from './OutputForm';
 
@@ -80,4 +80,5 @@ class ShellForm extends React.Component {
         );
     }
 }
+
 export default ShellForm;
