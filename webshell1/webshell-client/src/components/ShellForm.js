@@ -62,10 +62,7 @@ class ShellForm extends React.Component {
                 input: (this.state.items.map(item => item.input))[this.state.current],
                 output: (this.state.items.map(item => item.output))[this.state.current]
             }));
-
-
         }
-        
     }
     render() {
         return (
