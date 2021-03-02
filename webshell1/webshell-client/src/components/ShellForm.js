@@ -13,10 +13,6 @@ class ShellForm extends React.Component {
     }
     componentDidMount() {
         this.getItems();
-        this.setState({
-            input: this.state.items.map(item => item.input)[this.state.max - 1],
-            output: this.state.items.map(item => item.output)[this.state.max - 1]
-        })
     }
     getItems = () => {
         fetch(`${API_URL}`)
@@ -24,7 +20,9 @@ class ShellForm extends React.Component {
             .then(res => this.setState({
                 items: res,
                 max: res.length,
-                current: res.length
+                current: res.length,
+                input: (res.map(item => item.input))[res.length - 1],
+                output: (res.map(item => item.output))[res.length - 1]
             }))
             .catch(err => console.log(err));
     }
