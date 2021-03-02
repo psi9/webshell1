@@ -11,25 +11,17 @@ class ShellForm extends React.Component {
         max: ''
     }
     componentDidMount() {
-        this.getLastItem();
-    }
-    getLastItem = () => {
-        fetch(`${API_URL_LAST}`)
-            .then(res => res.json())
-            .then(res => this.setState({
-                max: res.id,
-                current: res.id,
-                input: res.input,
-                output: res.output
-            }))
-            .catch(err => console.log(err));
+        this.getItems();
     }
     getItem = (id) => {
         fetch(`${API_URL}/${id}`)
             .then(res => res.json())
             .then(res => this.setState({
-                input: res.input,
-                output: res.output
+                items: res,
+                max: res.length,
+                current: res.length,
+                input: (res.map(item => item.input))[res.length - 1],
+                output: (res.map(item => item.output))[res.length - 1]
             }))
             .catch(err => console.log(err));
     }
