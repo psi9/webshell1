@@ -23,29 +23,6 @@ namespace webshell1.Controllers
         {
             return await context.Commands.ToListAsync();
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Command>> GetCommand(int id)
-        {
-            var command = await context.Commands.FindAsync(id);
-
-            if (command == null)
-            {
-                return NotFound();
-            }
-
-            return command;
-        }
-        [HttpGet("last")]
-        public async Task<ActionResult<Command>> GetLastCommand()
-        {
-            var command = await context.Commands.OrderBy(c => c.Id).LastOrDefaultAsync();
-
-            if (command == null)
-            {
-                return NotFound();
-            }
-            return command;
-        }
         [HttpPost]
         public async Task<ActionResult<Command>> PostCommand([FromBody] string input)
         {
