@@ -29,7 +29,7 @@ namespace webshell1.Controllers
             Command command = new Command { Input = input, Output = output };
             context.Commands.Add(command);
             await context.SaveChangesAsync();
-            return CreatedAtAction("Index", new { id = command.Id }, command);
+            return CreatedAtAction("Index", command);
         }
         private string Execute(string input)
         {
