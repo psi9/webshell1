@@ -36,7 +36,7 @@ namespace webshell1
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Commands}/{action=Index}/{id?}");
+                    pattern: "{controller=Commands}/{action=Index}");
             });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
