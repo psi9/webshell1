@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,10 @@ namespace webshell1
                 try
                 {
                     var context = services.GetRequiredService<CommandContext>();
-                    context.Database.EnsureCreated();
+                    if (context.Database.IsSqlServer())
+                    {
+                        context.Database.Migrate();
+                    }
                 }
                 catch (Exception ex)
                 {
