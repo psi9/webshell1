@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,24 +11,64 @@ namespace webshell1.Controllers
     [ApiController]
     public class CommandsController : Controller
     {
-        private readonly CommandContext context;
-
-        public CommandsController(CommandContext context)
-        {
-            this.context = context;
-        }
+        string connectionString = "Server=(localdb)\\mssqllocaldb;Initial Catalog=TestDB;Persist Security Info=True;User ID=SomeUser;Password=Topsecret123;";
         [HttpGet]
-        public async Task<ActionResult<List<Command>>> Index()
+        public  ActionResult<List<Command>> Index()
         {
-            return await context.Commands.ToListAsync();
+            List<Command> commands = new List<Command>();
+            string query = "SELECT * FROM [dbo].[Table];";
+            using (SqlConnection connect = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, connect))
+                {
+                    connect.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Command command = new Command();
+                            command.Id = (int)reader["Id"];
+                            command.Input = (string)reader["Input"];
+                            command.Output = (string)reader["Output"];
+                            commands.Add(command);
+                        }
+                    }
+                }
+            }
+            return commands;
         }
         [HttpPost]
-        public async Task<ActionResult<Command>> PostCommand([FromBody] string input)
+        public ActionResult<Command> PostCommand([FromBody] string input) 
         {
             string output = Execute(input);
             Command command = new Command { Input = input, Output = output };
-            context.Commands.Add(command);
-            await context.SaveChangesAsync();
+            using (SqlConnection connect = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("Procedure1", connect))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter param1 = new SqlParameter
+                    {
+                        ParameterName = "@Input",
+                        SqlDbType = System.Data.SqlDbType.NVarChar,
+                        Value = input
+                    };
+                    SqlParameter param2 = new SqlParameter
+                    {
+                        ParameterName = "@Output",
+                        SqlDbType = System.Data.SqlDbType.NVarChar,
+                        Value = output
+                    };
+                    cmd.Parameters.Add(param1);
+                    cmd.Parameters.Add(param2);
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+            }
+            //string query = "INSERT INTO [dbo].[Table] (Id, Input, Output) Values(@Id, @Input, @Output)";
+            //cmd.Parameters.AddWithValue("@Input", input);
+            //cmd.Parameters.AddWithValue("@Output", output);
             return CreatedAtAction("Index", command);
         }
         private string Execute(string input)
@@ -47,6 +87,6 @@ namespace webshell1.Controllers
             process.WaitForExit();
             return output;
         }
+        }
     }
-}
 

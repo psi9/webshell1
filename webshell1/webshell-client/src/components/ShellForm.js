@@ -41,8 +41,8 @@ class ShellForm extends React.Component {
             .then(res => res.json())
             .then(res => this.setState({
                 items: [...this.state.items, res],
-                max: res.id,
-                current: res.id,
+                max: this.state.max + 1,
+                current: this.state.max + 1,
                 output: res.output
             }))
             .catch(err => console.log(err));
